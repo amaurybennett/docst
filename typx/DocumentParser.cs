@@ -59,6 +59,7 @@ namespace typx
             {
                 case "Titre1":
                 case "Normal":
+                case "Elipse":
                     var runsBuilder = ImmutableArray.CreateBuilder<M.Run>();
 
                     foreach (var child in p.ChildElements)
@@ -72,7 +73,9 @@ namespace typx
                             case W.ProofError pe:
                                 break;
                             case W.ParagraphProperties:
-                                // Silently ignore paragraph properties here
+                            case W.BookmarkStart:
+                            case W.BookmarkEnd:
+                                // Silently ignore those
                                 break;
                             default:
                                 throw new NotSupportedException($"Unsupported paragrah-level element: {child.GetType().Name}");
@@ -81,6 +84,9 @@ namespace typx
                     }
 
                     return new M.Paragraph(styleId, runsBuilder.ToImmutableArray());
+                case "Titre":
+                    // Silently ignore this style; it's used for the title page, which we don't care about
+                    return new M.Paragraph(styleId, ImmutableArray<M.Run>.Empty);
                 default:
                     throw new NotSupportedException($"Paragraphs style {styleId} not supported.");
             }
@@ -97,6 +103,7 @@ namespace typx
                 {
                     case W.Text t:
                         text = t.InnerText ?? "";
+                        //Console.WriteLine($"Found text: {text}");
                         break;
                     case W.RunProperties rp:
                         foreach (var property in rp.ChildElements)
