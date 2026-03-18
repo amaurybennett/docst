@@ -5,7 +5,7 @@ namespace docst
 {
     public abstract class AbstractExporter
     {
-        public abstract void Export(Document document);
+        public abstract void Export(Document document, string baseFile);
 
         public abstract string GetFileExtension();
 
@@ -18,9 +18,9 @@ namespace docst
 
     public abstract class BaseExporter : AbstractExporter
     {
-        public sealed override void Export(Document document)
+        public sealed override void Export(Document document, string baseFile)
         {
-            var filename = $"Anya.{GetFileExtension()}";
+            var filename = $"{baseFile}.{GetFileExtension()}";
             FileStream handle = File.OpenWrite(filename);
 
             var content = "";

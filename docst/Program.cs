@@ -39,6 +39,7 @@ foreach (string docxFile in docxFiles)
 {
     Console.WriteLine($"Processing: {docxFile}");
     var document = DocumentParser.Parse(docxFile);
-    typstExporter.Export(document);
-    epubstExporter.Export(document);
+    var baseFile = Path.GetFileNameWithoutExtension(docxFile);
+    typstExporter.Export(document, baseFile);
+    epubstExporter.Export(document, baseFile);
 }
