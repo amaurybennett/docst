@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
-using typx.Models;
+using docst.Models;
 
-namespace typx
+namespace docst
 {
     public abstract class AbstractExporter
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace typx.Models;
+namespace docst.Models;
 
 public record Document(ImmutableArray<Paragraph> Paragraphs);
 

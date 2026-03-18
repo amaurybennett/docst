@@ -1,6 +1,6 @@
-﻿using typx.Models;
+﻿using docst.Models;
 
-namespace typx
+namespace docst
 {
     public class TypstExporter : BaseExporter
     {

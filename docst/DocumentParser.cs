@@ -1,9 +1,9 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using System.Collections.Immutable;
-using M = typx.Models;
+using M = docst.Models;
 using W = DocumentFormat.OpenXml.Wordprocessing;
 
-namespace typx
+namespace docst
 {
     public class DocumentParser
     {

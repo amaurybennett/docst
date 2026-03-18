@@ -1,9 +1,9 @@
 ﻿using System.CommandLine;
-using typx;
+using docst;
 
 Option<FileInfo?> docxOption = new("--docx", "-d") { Description = "Path to a .docx file to process." };
 
-var rootCommand = new RootCommand("typx — converts .docx files to Epub and Typst formats.")
+var rootCommand = new RootCommand("docst — converts .docx files to Epub and Typst formats.")
 {
     docxOption
 };

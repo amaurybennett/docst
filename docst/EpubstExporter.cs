@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.IO.Enumeration;
-using typx.Models;
+using docst.Models;
 
-namespace typx
+namespace docst
 {
     public class EpubstExporter : BaseExporter
     {
