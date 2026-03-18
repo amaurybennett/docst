@@ -33,11 +33,12 @@ if (docxFiles.Count == 0)
     return;
 }
 
-TypstExporter typstExporter = new TypstExporter();
+TypstExporter typstExporter = new();
+EpubstExporter epubstExporter = new();
 foreach (string docxFile in docxFiles)
 {
     Console.WriteLine($"Processing: {docxFile}");
     var document = DocumentParser.Parse(docxFile);
-
     typstExporter.Export(document);
+    epubstExporter.Export(document);
 }
