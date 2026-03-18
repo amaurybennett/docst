@@ -67,3 +67,72 @@ jobs:
         with:
           files: artifacts/*
           generate_release_notes: true
+
+  homebrew:
+    name: Update Homebrew Tap
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: docst-osx-arm64.tar.gz
+
+      - name: Compute SHA256
+        id: sha256
+        run: echo "value=$(sha256sum docst-osx-arm64.tar.gz | awk '{print $1}')" >> "$GITHUB_OUTPUT"
+
+      - name: Clone tap
+        run: |
+          git clone https://x-access-token:${{ secrets.HOMEBREW_TAP_TOKEN }}@github.com/amaurybennett/homebrew-docst.git tap
+
+      - name: Generate formula
+        env:
+          TAG: ${{ github.ref_name }}
+          VERSION: ${{ github.ref_name }}
+          SHA256: ${{ steps.sha256.outputs.value }}
+        run: |
+          python3 - <<'PY'
+          import os, textwrap
+          tag     = os.environ["TAG"]
+          version = os.environ["VERSION"].lstrip("v")
+          sha256  = os.environ["SHA256"]
+          formula = textwrap.dedent(f"""\
+            # typed: true
+            # frozen_string_literal: true
+
+            class Docst < Formula
+              desc "Convertit des fichiers .docx en Typst (.typ) et Markdown/EPUB (.md)"
+              homepage "https://github.com/amaurybennett/docst"
+              license "MIT"
+              version "{version}"
+
+              on_macos do
+                if Hardware::CPU.arm?
+                  url "https://github.com/amaurybennett/docst/releases/download/{tag}/docst-osx-arm64.tar.gz"
+                  sha256 "{sha256}"
+                end
+              end
+
+              def install
+                bin.install "docst"
+              end
+
+              test do
+                system "#{{bin}}/docst", "--help"
+              end
+            end
+          """)
+          with open("tap/Formula/docst.rb", "w") as f:
+              f.write(formula)
+          PY
+
+      - name: Commit and push
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          cd tap
+          git config user.email "github-actions@github.com"
+          git config user.name "GitHub Actions"
+          git add Formula/docst.rb
+          git commit -m "chore: bump docst to ${TAG}"
+          git push
