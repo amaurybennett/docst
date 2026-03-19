@@ -10,6 +10,6 @@ namespace docst
 
         public override string GetItalic(string content) => $"_{content}_";
 
-        public override string GetElipse(string content) => $"== {content}";
+        public override string GetElipse(string content) => $"=== \\*\\*\\*";
     }
 }
